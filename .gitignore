@@ -1,0 +1,40 @@
+# Python/Flask
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+pip-selfcheck.json
+.pytest_cache/
+.coverage
+htmlcov/
+*.sqlite
+instance/
+.webassets-cache
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firebase.json
+firebase-key*.json
+serviceAccountKey.json
+firebase-adminsdk-*.json
+
+# Google Cloud
+.gcloudignore
+.gcloud/
+gcloudconfig
+*.swp
+.idea/
+.vscode/
+.env
+.env.local
+.env*.local
+
+# System
+.DS_Store
+Thumbs.db
