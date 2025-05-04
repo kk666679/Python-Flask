@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViralBoost - Make Your TikTok Videos Go Viral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF0050; /* TikTok pink */
+            --secondary: #00F2EA;
+            --dark: #121212;
+            --light: #f8f9fa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 0, 80, 0.3);
+        }
+        
+        .trending-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .trending-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem 0;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(255, 0, 80, 0.05);
+        }
+        
+        #video-preview {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .result-card {
+            text-align: center;
+            display: none;
+        }
+        
+        .virality-score {
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 1rem 0;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 1s ease;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ViralBoost</h1>
+        <p>AI-powered TikTok virality prediction</p>
+    </header>
+    
+    <div class="container">
+        <!-- Trending Section -->
+        <div class="card">
+            <h2>🔥 Trending Now</h2>
+            <p>Boost your video with these viral hashtags:</p>
+            <ul class="trending-list" id="trending-list">
+                <li class="trending-item">Loading trends...</li>
+            </ul>
+            <button class="btn" id="refresh-trends">Refresh Trends</button>
+        </div>
+        
+        <!-- Video Upload Section -->
+        <div class="card">
+            <h2>🎬 Analyze Your Video</h2>
+            <p>Upload your TikTok video to get a virality score:</p>
+            
+            <div class="upload-area" id="upload-area">
+                <p>Drag & drop your video here or click to browse</p>
+                <input type="file" id="video-upload" accept="video/*" style="display: none;">
+                <video id="video-preview" controls></video>
+            </div>
+            
+            <button class="btn" id="analyze-btn" style="display: none;">Analyze Video</button>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="card result-card" id="result-card">
+            <h2>📊 Your Virality Score</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="virality-score" id="virality-score">0%</div>
+            <p id="feedback-text">Analyzing your video...</p>
+            <button class="btn" id="optimize-btn">Get Optimization Tips</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('upload-area');
+        const videoUpload = document.getElementById('video-upload');
+        const videoPreview = document.getElementById('video-preview');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const resultCard = document.getElementById('result-card');
+        const viralityScore = document.getElementById('virality-score');
+        const progressBar = document.getElementById('progress-bar');
+        const feedbackText = document.getElementById('feedback-text');
+        const trendingList = document.getElementById('trending-list');
+        const refreshTrendsBtn = document.getElementById('refresh-trends');
+        
+        // API Base URL (Replace with your Flask backend URL)
+        const API_BASE = 'http://localhost:5000/api';
+        
+        // Event Listeners
+        uploadArea.addEventListener('click', () => videoUpload.click());
+        
+        videoUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const videoURL = URL.createObjectURL(file);
+                videoPreview.src = videoURL;
+                videoPreview.style.display = 'block';
+                analyzeBtn.style.display = 'inline-block';
+                uploadArea.style.padding = '1rem';
+            }
+        });
+        
+        analyzeBtn.addEventListener('click', async () => {
+            const file = videoUpload.files[0];
+            if (!file) return;
+            
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analyzing...';
+            
+            try {
+                // In a real app, you would upload to your Flask API
+                // Here we simulate API call with timeout
+                await simulateAnalysis();
+                
+                // Show results
+                resultCard.style.display = 'block';
+                animateScore(85); // Replace with actual API score
+                feedbackText.textContent = "Your video has strong potential! Add 2-3 more trending hashtags to maximize reach.";
+                
+                // Scroll to results
+                resultCard.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                alert('Analysis failed: ' + error.message);
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = 'Analyze Video';
+            }
+        });
+        
+        refreshTrendsBtn.addEventListener('click', fetchTrendingHashtags);
+        
+        // Functions
+        function animateScore(targetScore) {
+            let currentScore = 0;
+            const interval = setInterval(() => {
+                if (currentScore >= targetScore) {
+                    clearInterval(interval);
+                    return;
+                }
+                currentScore += 1;
+                viralityScore.textContent = `${currentScore}%`;
+                progressBar.style.width = `${currentScore}%`;
+            }, 20);
+        }
+        
+        async function simulateAnalysis() {
+            return new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        
+        async function fetchTrendingHashtags() {
+            trendingList.innerHTML = '<li class="trending-item">Loading...</li>';
+            refreshTrendsBtn.disabled = true;
+            
+            try {
+                // In a real app, fetch from your Flask API
+                // const response = await fetch(`${API_BASE}/trends`);
+                // const data = await response.json();
+                
+                // Simulated response
+                const data = {
+                    trends: ["dancechallenge", "viral", "fyp", "trending", "comedy", "foryou", "funny", "duet", "stitch", "savage"]
+                };
+                
+                trendingList.innerHTML = data.trends.map(tag => 
+                    `<li class="trending-item">#${tag}</li>`
+                ).join('');
+            } catch (error) {
+                trendingList.innerHTML = '<li class="trending-item">Failed to load trends</li>';
+                console.error('Error fetching trends:', error);
+            } finally {
+                refreshTrendsBtn.disabled = false;
+            }
+        }
+        
+        // Initialize
+        fetchTrendingHashtags();
+        
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.backgroundColor = 'rgba(255, 0, 80, 0.1)';
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.backgroundColor = 'transparent';
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            uploadArea.style.backgroundColor = 'transparent';
+            
+            if (e.dataTransfer.files.length) {
+                videoUpload.files = e.dataTransfer.files;
+                const event = new Event('change');
+                videoUpload.dispatchEvent(event);
+            }
+        });
+    </script>
+</body>
+</html>
