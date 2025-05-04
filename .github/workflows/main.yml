@@ -1,0 +1,14 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: zip -r viralboost-${{ github.ref_name }}.zip .
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: viralboost-${{ github.ref_name }}.zip
